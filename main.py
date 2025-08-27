@@ -1,17 +1,3 @@
-# my-ddns-update
-
-This will monitor your global IP address and attempt to update your DDNS if it changes.
-
-## How to use
-
-See `main.py` for detail. It is so simple code that the best way to understand it is to read the source code.
-
-1. Define a class that inherits from `DDNSUpdater`.
-1. Define an `update_url` variable to store the update URL.
-1. Override the `updated` function.
-1. Write code to determine whether the update was successful. The formal argument `res` is the return value of the `get` function (```requests.get()```) in the `requests` module. The first value of the returned tuple value indicates whether the update was successful, and the second value returns a message to display on the console if the update failed.
-
-```python
 from requests import Response
 
 from myddnsupdate import update, DDNSUpdater
@@ -41,4 +27,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```

@@ -1,0 +1,20 @@
+[project]
+name = "my-ddns-update"
+version = "0.1.0"
+description = "This will monitor your global IP address and attempt to update your DDNS if it changes."
+authors = [
+    {name = "hatomania",email = "73593645+hatomania@users.noreply.github.com"}
+]
+license = {text = "MIT License"}
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "requests (>=2.32.5,<3.0.0)",
+    "pydantic (>=2.11.7,<3.0.0)",
+    "pydantic-settings (>=2.10.1,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
