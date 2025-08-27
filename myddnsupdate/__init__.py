@@ -5,6 +5,11 @@ from requests import Response
 
 from myglobalip import my_global_ip_address
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 class DDNSUpdater:
     update_url: str
@@ -19,7 +24,7 @@ class DDNSUpdater:
         except FileNotFoundError:
             pass
         if chk:
-            print(f"[INFO] {self.__class__.__name__}: IP address change was detected. {old_ipaddr} => {ipaddr}")
+            logging.info(f"{self.__class__.__name__}: IP address change was detected. {old_ipaddr} => {ipaddr}")
         return chk
 
     def _save_ip(self, ipaddr: str) -> None:
@@ -31,9 +36,9 @@ class DDNSUpdater:
 
     def do_update(self) -> bool:
         response: Response = requests.get(self.update_url)
-        res, msg = self._updated(response)
+        res, msg = self.updated(response)
         if not res:
-            print(f"[WARN] {self.__class__.__name__}: IP address update failed. detail={msg}")
+            logging.warning(f"{self.__class__.__name__}: IP address update failed. detail={msg}")
         return res
 
     def post_update(self) -> None:
@@ -45,10 +50,6 @@ class DDNSUpdater:
             self.do_update()):
             self.post_update()
             self._save_ip(ipaddr)
-
-    def _updated(self, res: Response) -> tuple[bool, str]:
-        chk, msg = self.updated(res)
-        return chk, msg if not chk else ''
 
     def updated(self, res: Response) -> tuple[bool, str]:
         return res.status_code == 200, f'status_code={res.status_code}'
