@@ -1,0 +1,26 @@
+#!/usr/bin/sh
+
+# This is a script that is intended to be run by cron.
+
+CRON_LOG=cron.log
+
+cd /path/to/my-ddns-update
+/path/to/my-ddns-update/.venv/bin/python3 main.py >> ${CRON_LOG} 2>&1
+
+if sha1sum -c ${CRON_LOG}.sha1sum > /dev/null 2>&1; then
+    echo "✅ すべてOK"
+else
+    echo "❌ 不一致またはエラー"
+    if [ -s cron.log ]; then
+        swaks --to to@toyourmail.server \
+            --from from@fromyourmail.server \
+            --server smtp.your.server \
+            --auth LOGIN \
+            --auth-user your-username \
+            --auth-password your-password \
+            --tls-on-connect \
+            --header "Subject: グローバルIPアドレス監視結果" \
+            --body "$(cat ${CRON_LOG})"
+    fi
+    sha1sum ${CRON_LOG} > ${CRON_LOG}.sha1sum
+fi
